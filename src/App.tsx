@@ -22,7 +22,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="grid md:grid-rows-3 grid-cols-3 gap-4">
       {products.map((product) => (
         // Fix typescript error for type never
         <ProductCard

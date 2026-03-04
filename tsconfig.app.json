@@ -28,5 +28,11 @@
   "paths": {
     "@/*": ["./src/*"]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "ShadCN/card.tsx",
+    "ShadCN/button.tsx",
+    "ShadCN/badge.tsx",
+    "ShadCN/spinner.tsx"
+  ]
 }
