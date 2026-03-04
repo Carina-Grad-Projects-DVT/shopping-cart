@@ -1,22 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import { ProductCard } from "./components/productCard";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function App() {
   const [products, setProducts] = useState([]);
-  const fetchProducts = async () => {
-    // TODO: Loading state
-    try {
-      const response = await fetch(`${apiUrl}/products`);
-      const results = await response.json();
-      return setProducts(results);
-    } catch {
-      // TODO: Add alert for error state
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch(`${apiUrl}/products/category/electronics`);
+        const results = await response.json();
+        setProducts(results);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  };
-  console.log(products);
-  return <>Hello</>;
+
+    fetchProducts();
+  }, []);
+
+  return (
+    <div>
+      {products.map((product) => (
+        // Fix typescript error for type never
+        <ProductCard
+          key={product.id}
+          id={product.id}
+          title={product.title}
+          price={product.price}
+          image={product.image}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default App;
