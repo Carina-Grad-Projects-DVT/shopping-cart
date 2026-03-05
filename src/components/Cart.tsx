@@ -35,7 +35,7 @@ function Cart() {
 
   if (items.length === 0) {
     return (
-      <section className="py-32">
+      <section className="py-32 bg-card rounded-xl border">
         <div className="container max-w-lg text-center">
           <h1 className="mb-4 text-2xl font-semibold">Your cart is empty</h1>
           <p className="mb-8 text-muted-foreground">
@@ -51,7 +51,7 @@ function Cart() {
       <div className="container max-w-2xl">
         <h1 className="mb-8 text-3xl font-semibold">Shopping Cart</h1>
 
-        <div className="space-y-4">
+        <div className="space-y-4 py-32 bg-card rounded-xl border">
           {items.map((item) => (
             <div
               //   key={item.id}
@@ -83,11 +83,9 @@ function Cart() {
                   price
                 </p>
               </div>
-
+              {/* TODO: Use unique styling for this button */}
               <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0"
+                className="shrink-0 !bg-purple-500 hover:!bg-sky-500 hover:!border-sky-500"
                 // onClick={() => removeItem(item.id)}
               >
                 <X className="size-4" />
