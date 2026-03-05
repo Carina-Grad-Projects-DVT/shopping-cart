@@ -23,15 +23,18 @@ export const ProductCard = ({ id, title, price, image }: ProductCardProps) => {
       <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
       <img
         src={image}
-        alt="Event cover"
-        className="relative z-20 aspect-video w-full object-contain brightness-60 grayscale dark:brightness-40"
+        alt="Product" // Could use description for alt text
+        className="relative z-20 aspect-video w-full object-contain"
       />
       <CardHeader>
-        <CardAction></CardAction>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardFooter>
-        <Button className="w-full">Add to cart</Button>
+      {/* TODO: Figure out why I can't use justify-around or justify-between to align */}
+      <CardFooter className="gap-4">
+        <p>{price}</p>
+        <CardAction>
+          <Button className="">Add to cart</Button>
+        </CardAction>
       </CardFooter>
     </Card>
   );
