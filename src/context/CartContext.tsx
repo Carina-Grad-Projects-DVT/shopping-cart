@@ -1,93 +1,107 @@
-import { createContext, useContext, useReducer, useState } from "react";
-
-interface Cart {}
-
-interface CartContext {
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
-  increaseItemQuantity: (id: number) => void;
-  decreaseItemQuantity: (id: number) => void;
-}
+import { createContext, useContext, useReducer, type ReactNode } from "react";
 
 interface CartItem {
   id: number;
-  name: string;
-  count: number;
+  title: string;
   price: number;
-  total?: number;
+  quantity: number;
+  image: string;
 }
 
-const CartContext = createContext<CartContext | null>(null);
+interface CartContextType {
+  state: CartState;
+  dispatch: React.Dispatch<CartActions>;
+}
 
-const CartDispatchContext = createContext(null);
-
-interface CartItemsState {
+interface CartState {
   cart: CartItem[];
 }
+
+const initialState: CartState = {
+  cart: [],
+};
 
 type CartActions =
   | { type: "item_add"; payload: CartItem }
   | { type: "item_remove"; payload: number }
-  | { type: "item_count_increase"; payload: number }
-  | { type: "item_count_decrease"; payload: number };
+  | { type: "item_quantity_increase"; payload: number }
+  | { type: "item_quantity_decrease"; payload: number };
 
-export const CartContextProvider = ({ children }: { children: ReactNode }) => {
+function cartReducer(state: CartState, action: CartActions): CartState {
+  switch (action.type) {
+    case "item_add": {
+      // Check using id if item is in cart already
+      const productAlreadyInCart = state.cart.find(
+        (item) => item.id === action.payload.id,
+      );
+      if (productAlreadyInCart) {
+        // If already in cart increase quantity by 1
+        return {
+          ...state,
+          cart: state.cart.map((item) =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
+          ),
+        };
+      }
+      // if not already in cart, add product in cart with quantity of 1
+      return {
+        ...state,
+        cart: [...state.cart, { ...action.payload, quantity: 1 }],
+      };
+    }
+    // TODO: Check if quantity is set to 0
+    case "item_remove": {
+      return {
+        ...state,
+        cart: state.cart.filter((item) => item.id !== action.payload),
+      };
+    }
+    case "item_quantity_increase": {
+      return {
+        ...state,
+        cart: state.cart.map((item) =>
+          item.id === action.payload
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        ),
+      };
+    }
+    case "item_quantity_decrease": {
+      return {
+        ...state,
+        cart: state.cart
+          .map((item) =>
+            item.id === action.payload
+              ? { ...item, quantity: item.quantity - 1 }
+              : item,
+          )
+          .filter((item) => item.quantity > 0),
+      };
+    }
+    default:
+      return state;
+  }
+}
+const CartContext = createContext<CartContextType | null>(null);
+
+export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
   return (
-    <CartContext.Provider value={{}}>
-      <CartDispatchContext.Provider value={}>
-        {children}
-      </CartDispatchContext.Provider>
+    <CartContext.Provider value={{ state, dispatch }}>
+      {children}
     </CartContext.Provider>
   );
 };
 
-const useCartContext = () => {
+export function useCartContext() {
   const cartContext = useContext(CartContext);
 
   if (!cartContext) {
-    throw new Error(
-      "useCartContext has to be used within <CartContext.Provider>",
-    );
+    throw new Error("useCartContext has to be used within <CartProvider>");
   }
 
   return cartContext;
-};
-
-export { CartContextProvider };
-
-// const cartReducer = (cartItems: CartItemsState, action: CartAction): CartState => {
-//   switch (action.type) {
-//     case "item_add"{
-
-//     }
-//     case "item_remove"{
-//         return{
-//             cart: cartItems.cart.filter(cartItems.id => )
-//         }
-
-//     }
-//     case "item_count_increase"{
-
-//     }
-//     case "item_count_decrease"{
-
-//     }
-//     default:
-//         return state;
-//   }
-
-//   const [cartItems, dispatch] = useReducer(
-//     cartReducer,
-//     initialCart);
-
-//   const addToCart = (item: CartItem) =>
-//     dispatch({ type: "item_add", payload: item });
-
-//   const removeItem = (id: number) =>
-//     dispatch({ type: "item_remove", payload: id });
-
-//   const increaseItemCount = (id: number) =>
-//     dispatch({ type: "item_count_increase", payload: id });
-
-//   const decreaseItemCount = (id: number) =>
-//     dispatch({ type: "item_count_decrease", payload: id });
+}
