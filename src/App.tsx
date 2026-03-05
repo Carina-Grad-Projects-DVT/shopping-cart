@@ -1,39 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./App.css";
-import { ProductCard } from "./components/productCard";
+import { ProductCard } from "./components/ProductCard";
+import Cart from "./components/Cart";
+import { ProductProvider } from "./context/ProductContext";
+import Product from "./pages/Product";
+import { CartProvider } from "./context/CartContext";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
+// TODO : Change layout for mobile first
 function App() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch(`${apiUrl}/products/category/electronics`);
-        const results = await response.json();
-        setProducts(results);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchProducts();
-  }, []);
-
   return (
-    <div className="grid md:grid-rows-3 grid-cols-3 gap-4">
-      {products.map((product) => (
-        // TODO: Fix typescript error for type never
-        <ProductCard
-          key={product.id}
-          id={product.id}
-          title={product.title}
-          price={product.price}
-          image={product.image}
-        />
-      ))}
-    </div>
+    <ProductProvider>
+      <CartProvider>
+        <Product />;
+      </CartProvider>
+    </ProductProvider>
   );
 }
 
