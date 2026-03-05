@@ -33,6 +33,8 @@
     "ShadCN/card.tsx",
     "ShadCN/button.tsx",
     "ShadCN/badge.tsx",
-    "ShadCN/spinner.tsx"
+    "ShadCN/spinner.tsx",
+    "ShadCN/aspect-ratio.tsx",
+    "ShadCN/separator.tsx"
   ]
 }
