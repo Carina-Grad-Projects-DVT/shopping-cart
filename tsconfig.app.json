@@ -24,5 +24,17 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "baseUrl": ".",
+  "paths": {
+    "@/*": ["./src/*"]
+  },
+  "include": [
+    "src",
+    "ShadCN/card.tsx",
+    "ShadCN/button.tsx",
+    "ShadCN/badge.tsx",
+    "ShadCN/spinner.tsx",
+    "ShadCN/aspect-ratio.tsx",
+    "ShadCN/separator.tsx"
+  ]
 }
